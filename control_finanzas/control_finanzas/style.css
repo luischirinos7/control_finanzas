@@ -1,0 +1,353 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: Verdana, Geneva, sans-serif;
+    background: #f0f2f5;
+    color: #333;
+    line-height: 1.4;
+}
+
+.cabecera {
+    background: #2c3e50;
+    padding: 12px 20px;
+    border-bottom: 3px solid #2980b9;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.titulo-principal {
+    color: white;
+    font-size: 20px;
+    font-weight: bold;
+}
+
+.navegacion {
+    display: flex;
+    gap: 5px;
+}
+
+.boton-nav {
+    padding: 6px 12px;
+    background: #34495e;
+    color: white;
+    text-decoration: none;
+    border-radius: 3px;
+    font-size: 13px;
+}
+
+.boton-nav:hover {
+    background: #3498db;
+}
+
+.boton-nav.activo {
+    background: #2980b9;
+    font-weight: bold;
+}
+
+.contenido {
+    max-width: 1000px;
+    margin: 15px auto;
+    padding: 0 15px;
+}
+
+.panel-resumen {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 15px;
+    margin-bottom: 20px;
+}
+
+.tarjeta {
+    background: white;
+    padding: 18px;
+    border-radius: 6px;
+    border-left: 4px solid #3498db;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+}
+
+.tarjeta.ingreso {
+    border-left-color: #27ae60;
+}
+
+.tarjeta.gasto {
+    border-left-color: #c0392b;
+}
+
+.tarjeta.balance {
+    border-left-color: #f39c12;
+}
+
+.tarjeta-titulo {
+    font-size: 12px;
+    color: #666;
+    margin-bottom: 5px;
+    text-transform: uppercase;
+}
+
+.tarjeta-valor {
+    font-size: 24px;
+    font-weight: bold;
+    color: #2c3e50;
+    margin-bottom: 5px;
+}
+
+.tarjeta-info {
+    font-size: 11px;
+    color: #888;
+}
+
+.panel-principal {
+    display: grid;
+    grid-template-columns: 2fr 1fr;
+    gap: 15px;
+    margin-bottom: 20px;
+}
+
+.seccion {
+    background: white;
+    padding: 15px;
+    border-radius: 6px;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+}
+
+.seccion-titulo {
+    font-size: 15px;
+    font-weight: bold;
+    color: #2c3e50;
+    margin-bottom: 12px;
+    padding-bottom: 8px;
+    border-bottom: 1px solid #eee;
+}
+
+.grafico-container {
+    padding: 12px;
+    background: #f8f8f8;
+    border-radius: 4px;
+    margin-bottom: 8px;
+}
+
+.selector-mes {
+    padding: 4px 8px;
+    border: 1px solid #ccc;
+    border-radius: 3px;
+    background: white;
+    font-size: 12px;
+}
+
+.lista-contenedor {
+    border: 1px solid #eee;
+    border-radius: 4px;
+    overflow: hidden;
+}
+
+.lista-cabecera {
+    display: grid;
+    grid-template-columns: 2fr 1fr 1fr;
+    padding: 8px 12px;
+    background: #f8f8f8;
+    font-weight: bold;
+    font-size: 11px;
+    color: #666;
+    border-bottom: 1px solid #eee;
+}
+
+#lista-transacciones {
+    list-style: none;
+}
+
+.item-lista {
+    display: grid;
+    grid-template-columns: 2fr 1fr 1fr;
+    padding: 10px 12px;
+    border-bottom: 1px solid #f5f5f5;
+    align-items: center;
+}
+
+.item-lista:last-child {
+    border-bottom: none;
+}
+
+.estado-vacio {
+    padding: 25px;
+    text-align: center;
+    color: #888;
+    font-style: italic;
+}
+
+.boton-chico {
+    display: inline-block;
+    padding: 4px 10px;
+    background: #3498db;
+    color: white;
+    text-decoration: none;
+    border-radius: 3px;
+    font-size: 11px;
+    margin-top: 8px;
+}
+
+.boton-chico:hover {
+    background: #2980b9;
+}
+
+.contenedor-formulario {
+    background: white;
+    padding: 20px;
+    border-radius: 6px;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+    margin-bottom: 15px;
+}
+
+.grupo-form {
+    margin-bottom: 12px;
+}
+
+.grupo-form label {
+    display: block;
+    margin-bottom: 4px;
+    font-weight: bold;
+    color: #2c3e50;
+    font-size: 13px;
+}
+
+.grupo-form input,
+.grupo-form select {
+    width: 100%;
+    padding: 6px 10px;
+    border: 1px solid #ccc;
+    border-radius: 3px;
+    font-size: 13px;
+}
+
+.grupo-color {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.muestra-color {
+    width: 25px;
+    height: 25px;
+    border: 1px solid #ccc;
+    border-radius: 3px;
+}
+
+.boton {
+    padding: 8px 15px;
+    background: #3498db;
+    color: white;
+    border: none;
+    border-radius: 3px;
+    font-size: 13px;
+    font-weight: bold;
+    cursor: pointer;
+}
+
+.boton:hover {
+    background: #2980b9;
+}
+
+.boton.eliminar {
+    background: #c0392b;
+}
+
+.boton.eliminar:hover {
+    background: #a93226;
+}
+
+.boton-secundario {
+    padding: 8px 15px;
+    background: #95a5a6;
+    color: white;
+    border: none;
+    border-radius: 3px;
+    font-size: 13px;
+    cursor: pointer;
+}
+
+.acciones-form {
+    display: flex;
+    gap: 8px;
+    margin-top: 15px;
+}
+
+.grid-categorias {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+    gap: 12px;
+    list-style: none;
+}
+
+.item-categoria {
+    background: #f8f8f8;
+    padding: 12px;
+    border-radius: 4px;
+    border-left: 3px solid #3498db;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.filtros {
+    display: flex;
+    gap: 8px;
+    margin-bottom: 12px;
+}
+
+.filtro {
+    padding: 4px 10px;
+    background: #eee;
+    border: 1px solid #ccc;
+    border-radius: 3px;
+    cursor: pointer;
+    font-size: 12px;
+}
+
+.filtro.activo {
+    background: #3498db;
+    color: white;
+    border-color: #2980b9;
+}
+
+.busqueda {
+    padding: 5px 10px;
+    border: 1px solid #ccc;
+    border-radius: 3px;
+    width: 100%;
+    max-width: 250px;
+    font-size: 12px;
+}
+
+.mensaje-proximo {
+    padding: 30px;
+    text-align: center;
+    background: #f8f8f8;
+    border-radius: 4px;
+    border: 1px dashed #ccc;
+    color: #666;
+    margin: 15px 0;
+}
+
+@media (max-width: 768px) {
+    .panel-resumen {
+        grid-template-columns: 1fr;
+    }
+    
+    .panel-principal {
+        grid-template-columns: 1fr;
+    }
+    
+    .cabecera {
+        flex-direction: column;
+        gap: 8px;
+    }
+    
+    .navegacion {
+        flex-wrap: wrap;
+        justify-content: center;
+    }
+}
