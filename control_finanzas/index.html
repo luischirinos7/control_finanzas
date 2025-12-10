@@ -70,7 +70,7 @@
                         <ul id="lista-transacciones">
                             <li class="estado-vacio">
                                 <div>No hay movimientos registrados</div>
-                                <a href="#transacciones" class="boton-chico">Agregar movimiento</a>
+                                <button id="btn-nueva-transaccion" class="boton-chico">Agregar movimiento</button>
                             </li>
                         </ul>
                     </div>
@@ -207,6 +207,56 @@
             </div>
         </section>
     </main>
+
+<div id="modal-transaccion" class="modal-oculto">
+    <div class="modal-overlay"></div>
+
+    <div class="modal-contenido">
+        <h2 class="modal-titulo">Nueva Transacción</h2>
+
+        <form id="form-transaccion">
+
+            <div class="grupo-form">
+                <label for="tipo-mov">Tipo</label>
+                <select id="tipo-mov" required>
+                    <option value="ingreso">Ingreso</option>
+                    <option value="gasto">Gasto</option>
+                </select>
+            </div>
+
+            <div class="grupo-form">
+    <label for="monto-mov">Monto</label>
+
+    <div class="input-monto">
+        <input type="number" id="monto-mov" min="0.01" step="0.01" required>
+        <span class="simbolo-moneda">$</span>
+    </div>
+</div>
+
+
+            <div class="grupo-form">
+                <label for="fecha-mov">Fecha</label>
+                <input type="date" id="fecha-mov" required>
+            </div>
+
+            <div class="grupo-form">
+                <label for="categoria-mov">Categoría</label>
+                <select id="categoria-mov" required></select>
+            </div>
+
+            <div class="grupo-form">
+                <label for="descripcion-mov">Descripción (opcional)</label>
+                <input type="text" id="descripcion-mov" placeholder="Ej: Pago de luz, Venta producto...">
+            </div>
+
+            <div class="acciones-form modal-acciones">
+                <button type="submit" class="boton">Guardar</button>
+                <button type="button" id="cerrar-modal" class="boton-secundario">Cancelar</button>
+            </div>
+        </form>
+    </div>
+</div>
+
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <script src="js/db.js"></script>
     <script src="js/categorias.js"></script>

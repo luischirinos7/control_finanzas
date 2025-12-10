@@ -351,3 +351,92 @@ body {
         justify-content: center;
     }
 }
+
+.modal-oculto {
+    display: none;
+}
+
+#modal-transaccion {
+    position: fixed;
+    inset: 0;
+    z-index: 2000;
+}
+
+.modal-overlay {
+    position: absolute;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.45);
+    backdrop-filter: blur(2px);
+}
+
+.modal-contenido {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 95%;
+    max-width: 420px;
+    background: white;
+    padding: 25px;
+    border-radius: 8px;
+    transform: translate(-50%, -50%);
+    box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+    animation: modalFade 0.18s ease-out;
+}
+
+.modal-titulo {
+    font-size: 20px;
+    margin-bottom: 15px;
+    color: #2c3e50;
+    text-align: center;
+}
+
+.modal-acciones {
+    justify-content: space-between;
+}
+
+/* Animación suave */
+@keyframes modalFade {
+    from {
+        opacity: 0;
+        transform: translate(-50%, -48%);
+    }
+    to {
+        opacity: 1;
+        transform: translate(-50%, -50%);
+    }
+}
+
+.input-monto {
+    position: relative;
+    display: flex;
+    align-items: center;
+}
+
+.input-monto input {
+    width: 100%;
+    padding-right: 25px; /* espacio para el símbolo */
+    padding: 6px 10px;
+    border: 1px solid #ccc;
+    border-radius: 3px;
+    font-size: 13px;
+}
+
+.simbolo-moneda {
+    position: absolute;
+    right: 10px;
+    color: #666;
+    font-weight: bold;
+    pointer-events: none;
+}
+
+/* Quitar flechas en Chrome / Edge / Opera */
+input[type=number]::-webkit-inner-spin-button,
+input[type=number]::-webkit-outer-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+}
+
+/* Quitar flechas en Firefox */
+input[type=number] {
+    -moz-appearance: textfield;
+}

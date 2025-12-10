@@ -763,3 +763,116 @@ document.addEventListener('db-ready', async () => {
     const dashboard = new DashboardComponent();
     await dashboard.afterRender();
 });
+
+document.addEventListener("DOMContentLoaded", () => {
+    const btn = document.getElementById("btn-nueva-transaccion");
+    const modal = document.getElementById("modal-transaccion");
+    const cerrar = document.getElementById("cerrar-modal");
+
+    if (btn) {
+        btn.addEventListener("click", () => {
+            modal.classList.remove("modal-oculto");
+        });
+    }
+
+    cerrar.addEventListener("click", () => {
+        modal.classList.add("modal-oculto");
+    });
+
+    modal.querySelector(".modal-overlay").addEventListener("click", () => {
+        modal.classList.add("modal-oculto");
+    });
+});
+
+document.addEventListener("db-ready", () => {
+    const form = document.getElementById("form-transaccion");
+
+    form.addEventListener("submit", async (e) => {
+        e.preventDefault();
+
+        const tipo = document.getElementById("tipo-mov").value;
+        const monto = parseFloat(document.getElementById("monto-mov").value);
+        const fecha = document.getElementById("fecha-mov").value;
+        const categoria = document.getElementById("categoria-mov").value;
+        const descripcion = document.getElementById("descripcion-mov").value.trim();
+
+        if (!categoria) {
+            alert("Debe seleccionar una categoría");
+            return;
+        }
+
+        const transaccion = {
+            tipo,
+            monto,
+            fecha,
+            categoriaId: parseInt(categoria),
+            descripcion,
+            creado: Date.now()   // útil para ordenar más adelante
+        };
+
+        try {
+            await agregarItem("movimientos", transaccion);
+            console.log("Transacción guardada:", transaccion);
+
+            form.reset();
+
+            document.getElementById("modal-transaccion").classList.add("modal-oculto");
+
+            cargarUltimosMovimientos();  // refresca la lista en el panel
+
+        } catch (err) {
+            console.error("Error al guardar movimiento:", err);
+        }
+    });
+});
+document.addEventListener("db-ready", async () => {
+    const selectorCat = document.getElementById("categoria-mov");
+
+    const categorias = await obtenerTodos("categorias");
+
+    selectorCat.innerHTML = "";
+
+    categorias.forEach(cat => {
+        const op = document.createElement("option");
+        op.value = cat.id;
+        op.textContent = cat.nombre;
+        selectorCat.appendChild(op);
+    });
+});
+async function cargarUltimosMovimientos() {
+    const lista = document.getElementById("lista-transacciones");
+
+    const movimientos = await obtenerTodos("movimientos");
+    const categorias = await obtenerTodos("categorias");
+
+    lista.innerHTML = "";
+
+    if (movimientos.length === 0) {
+        lista.innerHTML = `
+            <li class="estado-vacio">
+                <div>No hay movimientos registrados</div>
+                <button id="btn-nueva-transaccion" class="boton-chico">Agregar movimiento</button>
+            </li>
+        `;
+        return;
+    }
+
+    movimientos
+        .sort((a, b) => b.creado - a.creado)
+        .slice(0, 5)
+        .forEach(mov => {
+
+            const cat = categorias.find(c => c.id === mov.categoriaId);
+
+            const li = document.createElement("li");
+            li.className = "item-lista";
+
+            li.innerHTML = `
+                <span>${cat ? cat.nombre : "Sin categoría"}</span>
+                <span>${mov.tipo === "gasto" ? "-" : "+"}$${mov.monto.toFixed(2)}</span>
+                <span>${mov.fecha}</span>
+            `;
+
+            lista.appendChild(li);
+        });
+}
