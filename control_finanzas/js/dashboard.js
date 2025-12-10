@@ -469,4 +469,292 @@ class DashboardComponent {
                                 label: function(context) {
                                     const label = context.label || '';
                                     const value = context.raw || 0;
-                                    const total = context.dataset.data.reduce((a, b) => a + b,
+                                    const total = context.dataset.data.reduce((a, b) => a + b, 0);
+const percentage = Math.round((value / total) * 100);
+return `${label}: $${value.toFixed(2)} (${percentage}%)`;
+}
+}
+}
+}
+}
+});
+            
+} catch (error) {
+console.error('Error creando grafico de gastos:', error);
+}
+}
+
+async actualizarGraficoGastos(mes) {
+await this.crearGraficoGastos(mes);
+}
+
+async crearGraficoEvolucion(ano) {
+try {
+const transacciones = await obtenerTodosItems(STORES.TRANSACCIONES);
+            
+const balancesMensuales = Array(12).fill(0);
+            
+for (let mes = 0; mes < 12; mes++) {
+let ingresos = 0;
+let gastos = 0;
+                
+transacciones.forEach(trans => {
+const fechaTrans = new Date(trans.fecha);
+const mesTrans = fechaTrans.getMonth();
+const anoTrans = fechaTrans.getFullYear();
+                    
+if (mesTrans === mes && anoTrans === ano) {
+if (trans.tipo === 'ingreso') {
+ingresos += trans.monto;
+} else {
+gastos += trans.monto;
+}
+}
+});
+                
+balancesMensuales[mes] = ingresos - gastos;
+}
+            
+const canvas = document.getElementById('grafico-evolucion');
+if (!canvas) return;
+            
+const ctx = canvas.getContext('2d');
+            
+if (this.graficoEvolucion) {
+this.graficoEvolucion.destroy();
+}
+            
+const meses = ['Ene', 'Feb', 'Mar', 'Abr', 'May', 'Jun', 'Jul', 'Ago', 'Sep', 'Oct', 'Nov', 'Dic'];
+            
+this.graficoEvolucion = new Chart(ctx, {
+type: 'line',
+data: {
+labels: meses,
+datasets: [{
+label: 'Balance Mensual',
+data: balancesMensuales,
+borderColor: '#3498db',
+backgroundColor: 'rgba(52, 152, 219, 0.1)',
+borderWidth: 2,
+tension: 0.3
+}]
+},
+options: {
+responsive: true,
+maintainAspectRatio: false,
+plugins: {
+legend: { position: 'bottom' },
+tooltip: {
+callbacks: {
+label: function(context) {
+const value = context.raw || 0;
+const signo = value >= 0 ? '+' : '';
+return `Balance: ${signo}$${value.toFixed(2)}`;
+}
+}
+}
+},
+scales: {
+y: {
+beginAtZero: true,
+ticks: {
+callback: function(value) {
+return `$${value}`;
+}
+}
+}
+}
+}
+});
+            
+} catch (error) {
+console.error('Error creando grafico de evolucion:', error);
+}
+}
+
+async actualizarGraficoEvolucion(ano) {
+await this.crearGraficoEvolucion(ano);
+}
+
+async crearGraficoBalance(mes) {
+try {
+const transacciones = await obtenerTodosItems(STORES.TRANSACCIONES);
+const presupuestos = await obtenerTodosItems(STORES.PRESUPUESTOS);
+const categorias = await obtenerTodosItems(STORES.CATEGORIAS);
+const anoActual = new Date().getFullYear();
+            
+let ingresosReales = 0;
+let gastosReales = 0;
+let gastosEstimados = 0;
+            
+transacciones.forEach(trans => {
+const fechaTrans = new Date(trans.fecha);
+const mesTrans = fechaTrans.getMonth() + 1;
+const anoTrans = fechaTrans.getFullYear();
+                
+if (mesTrans === mes && anoTrans === anoActual) {
+if (trans.tipo === 'ingreso') {
+ingresosReales += trans.monto;
+} else {
+gastosReales += trans.monto;
+}
+}
+});
+            
+presupuestos.forEach(pres => {
+if (pres.mes === mes && pres.ano === anoActual) {
+const cat = categorias.find(c => c.id === pres.categoria);
+if (cat && cat.tipo === 'gasto') {
+gastosEstimados += pres.monto;
+}
+}
+});
+            
+const balanceReal = ingresosReales - gastosReales;
+const balanceEstimado = ingresosReales - gastosEstimados;
+            
+const canvas = document.getElementById('grafico-balance');
+if (!canvas) return;
+            
+const ctx = canvas.getContext('2d');
+            
+if (this.graficoBalance) {
+this.graficoBalance.destroy();
+}
+            
+this.graficoBalance = new Chart(ctx, {
+type: 'bar',
+data: {
+labels: ['Balance'],
+datasets: [
+{
+label: 'Real',
+data: [balanceReal],
+backgroundColor: '#27ae60',
+borderColor: '#27ae60',
+borderWidth: 1
+},
+{
+label: 'Estimado',
+data: [balanceEstimado],
+backgroundColor: '#3498db',
+borderColor: '#3498db',
+borderWidth: 1
+}
+]
+},
+options: {
+responsive: true,
+maintainAspectRatio: false,
+plugins: { legend: { position: 'bottom' } },
+scales: {
+y: {
+beginAtZero: true,
+ticks: {
+callback: function(value) {
+return `$${value}`;
+}
+}
+}
+}
+}
+});
+            
+} catch (error) {
+console.error('Error creando grafico de balance:', error);
+}
+}
+
+async actualizarGraficoBalance(mes) {
+await this.crearGraficoBalance(mes);
+}
+
+async crearGraficoComparativa(mes) {
+try {
+const transacciones = await obtenerTodosItems(STORES.TRANSACCIONES);
+const anoActual = new Date().getFullYear();
+            
+let ingresos = 0;
+let gastos = 0;
+            
+transacciones.forEach(trans => {
+const fechaTrans = new Date(trans.fecha);
+const mesTrans = fechaTrans.getMonth() + 1;
+const anoTrans = fechaTrans.getFullYear();
+                
+if (mesTrans === mes && anoTrans === anoActual) {
+if (trans.tipo === 'ingreso') ingresos += trans.monto;
+else gastos += trans.monto;
+}
+});
+            
+const canvas = document.getElementById('grafico-comparativa');
+if (!canvas) return;
+            
+const ctx = canvas.getContext('2d');
+            
+if (this.graficoComparativa) this.graficoComparativa.destroy();
+            
+this.graficoComparativa = new Chart(ctx, {
+type: 'bar',
+data: {
+labels: ['Ingresos vs Gastos'],
+datasets: [
+{
+label: 'Ingresos',
+data: [ingresos],
+backgroundColor: '#27ae60',
+borderColor: '#27ae60',
+borderWidth: 1
+},
+{
+label: 'Gastos',
+data: [gastos],
+backgroundColor: '#e74c3c',
+borderColor: '#e74c3c',
+borderWidth: 1
+}
+]
+},
+options: {
+responsive: true,
+maintainAspectRatio: false,
+plugins: { legend: { position: 'bottom' } },
+scales: {
+y: {
+beginAtZero: true,
+ticks: {
+callback: function(value) {
+return `$${value}`;
+}
+}
+}
+}
+}
+});
+            
+} catch (error) {
+console.error('Error creando grafico de comparativa:', error);
+}
+}
+
+async actualizarGraficoComparativa(mes) {
+await this.crearGraficoComparativa(mes);
+}
+
+async actualizarDashboard() {
+await this.cargarResumen();
+await this.cargarTransaccionesRecientes();
+await this.cargarPresupuestosDashboard();
+        
+const mesActual = new Date().getMonth() + 1;
+await this.actualizarGraficoGastos(mesActual);
+await this.actualizarGraficoBalance(mesActual);
+await this.actualizarGraficoComparativa(mesActual);
+}
+}
+
+if (typeof window.components === 'undefined') {
+window.components = {};
+}
+window.components.DashboardComponent = DashboardComponent;
