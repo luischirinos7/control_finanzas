@@ -163,7 +163,7 @@ class DashboardComponent {
 
     async cargarResumen() {
         try {
-            const transacciones = await obtenerTodosItems(STORES.TRANSACCIONES);
+            const transacciones = await obtenerTodos(STORES.MOVIMIENTOS);
             const mesActual = new Date().getMonth() + 1;
             const anoActual = new Date().getFullYear();
             
@@ -216,8 +216,8 @@ class DashboardComponent {
 
     async cargarTransaccionesRecientes() {
         try {
-            const transacciones = await obtenerTodosItems(STORES.TRANSACCIONES);
-            const categorias = await obtenerTodosItems(STORES.CATEGORIAS);
+            const transacciones = await obtenerTodos(STORES.MOVIMIENTOS);
+            const categorias = await obtenerTodos(STORES.CATEGORIAS);
             
             // Ordenar por fecha (más recientes primero)
             transacciones.sort((a, b) => new Date(b.fecha) - new Date(a.fecha));
@@ -262,9 +262,9 @@ class DashboardComponent {
 
     async cargarPresupuestosDashboard() {
         try {
-            const presupuestos = await obtenerTodosItems(STORES.PRESUPUESTOS);
-            const categorias = await obtenerTodosItems(STORES.CATEGORIAS);
-            const transacciones = await obtenerTodosItems(STORES.TRANSACCIONES);
+            const presupuestos = await obtenerTodos(STORES.PRESUPUESTOS);
+            const categorias = await obtenerTodos(STORES.CATEGORIAS);
+            const transacciones = await obtenerTodos(STORES.MOVIMIENTOS);
             
             const mesActual = new Date().getMonth() + 1;
             const anoActual = new Date().getFullYear();
@@ -390,8 +390,8 @@ class DashboardComponent {
 
     async crearGraficoGastos(mes) {
         try {
-            const transacciones = await obtenerTodosItems(STORES.TRANSACCIONES);
-            const categorias = await obtenerTodosItems(STORES.CATEGORIAS);
+            const transacciones = await obtenerTodos(STORES.MOVIMIENTOS);
+            const categorias = await obtenerTodos(STORES.CATEGORIAS);
             const anoActual = new Date().getFullYear();
             
             const gastosPorCategoria = {};
@@ -490,7 +490,7 @@ await this.crearGraficoGastos(mes);
 
 async crearGraficoEvolucion(ano) {
 try {
-const transacciones = await obtenerTodosItems(STORES.TRANSACCIONES);
+const transacciones = await obtenerTodos(STORES.MOVIMIENTOS);
             
 const balancesMensuales = Array(12).fill(0);
             
@@ -578,9 +578,9 @@ await this.crearGraficoEvolucion(ano);
 
 async crearGraficoBalance(mes) {
 try {
-const transacciones = await obtenerTodosItems(STORES.TRANSACCIONES);
-const presupuestos = await obtenerTodosItems(STORES.PRESUPUESTOS);
-const categorias = await obtenerTodosItems(STORES.CATEGORIAS);
+const transacciones = await obtenerTodos(STORES.MOVIMIENTOS);
+const presupuestos = await obtenerTodos(STORES.PRESUPUESTOS);
+const categorias = await obtenerTodos(STORES.CATEGORIAS);
 const anoActual = new Date().getFullYear();
             
 let ingresosReales = 0;
@@ -671,7 +671,7 @@ await this.crearGraficoBalance(mes);
 
 async crearGraficoComparativa(mes) {
 try {
-const transacciones = await obtenerTodosItems(STORES.TRANSACCIONES);
+const transacciones = await obtenerTodos(STORES.MOVIMIENTOS);
 const anoActual = new Date().getFullYear();
             
 let ingresos = 0;
@@ -758,3 +758,8 @@ if (typeof window.components === 'undefined') {
 window.components = {};
 }
 window.components.DashboardComponent = DashboardComponent;
+
+document.addEventListener('db-ready', async () => {
+    const dashboard = new DashboardComponent();
+    await dashboard.afterRender();
+});

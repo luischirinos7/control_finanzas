@@ -11,38 +11,99 @@ const STORES = {
 
 document.addEventListener('DOMContentLoaded', function() {
     const solicitud = indexedDB.open(DB_NAME, DB_VERSION);
-    
+
     solicitud.onerror = function(evento) {
-        console.error('Error DB:', evento.target.error);
+        console.error('Error al abrir la DB:', evento.target.error);
     };
-    
+
     solicitud.onsuccess = function(evento) {
         db = evento.target.result;
         console.log('DB lista');
+        document.dispatchEvent(new Event('db-ready'));
     };
-    
+
     solicitud.onupgradeneeded = function(evento) {
         db = evento.target.result;
-        
+
         if (!db.objectStoreNames.contains(STORES.CATEGORIAS)) {
             db.createObjectStore(STORES.CATEGORIAS, { 
                 keyPath: 'id', 
-                autoIncrement: true 
+                autoIncrement: true
             });
         }
-        
+
         if (!db.objectStoreNames.contains(STORES.MOVIMIENTOS)) {
             db.createObjectStore(STORES.MOVIMIENTOS, { 
                 keyPath: 'id', 
-                autoIncrement: true 
+                autoIncrement: true
             });
         }
-        
+
         if (!db.objectStoreNames.contains(STORES.PRESUPUESTOS)) {
             db.createObjectStore(STORES.PRESUPUESTOS, { 
                 keyPath: 'id', 
-                autoIncrement: true 
+                autoIncrement: true
             });
         }
     };
 });
+
+// Agregar un nuevo registro
+function agregarItem(store, data) {
+    return new Promise((resolve, reject) => {
+        const tx = db.transaction([store], 'readwrite');
+        const objStore = tx.objectStore(store);
+        const request = objStore.add(data);
+
+        request.onsuccess = () => resolve(request.result);
+        request.onerror = (e) => reject(e.target.error);
+    });
+}
+
+// Obtener todos los registros
+function obtenerTodos(store) {
+    return new Promise((resolve, reject) => {
+        const tx = db.transaction([store], 'readonly');
+        const objStore = tx.objectStore(store);
+        const request = objStore.getAll();
+
+        request.onsuccess = () => resolve(request.result);
+        request.onerror = (e) => reject(e.target.error);
+    });
+}
+
+// Obtener un registro por ID
+function obtenerPorId(store, id) {
+    return new Promise((resolve, reject) => {
+        const tx = db.transaction([store], 'readonly');
+        const objStore = tx.objectStore(store);
+        const request = objStore.get(id);
+
+        request.onsuccess = () => resolve(request.result);
+        request.onerror = (e) => reject(e.target.error);
+    });
+}
+
+// Actualizar un registro
+function actualizarItem(store, data) {
+    return new Promise((resolve, reject) => {
+        const tx = db.transaction([store], 'readwrite');
+        const objStore = tx.objectStore(store);
+        const request = objStore.put(data);
+
+        request.onsuccess = () => resolve(true);
+        request.onerror = (e) => reject(e.target.error);
+    });
+}
+
+// Eliminar un registro
+function eliminarItem(store, id) {
+    return new Promise((resolve, reject) => {
+        const tx = db.transaction([store], 'readwrite');
+        const objStore = tx.objectStore(store);
+        const request = objStore.delete(id);
+
+        request.onsuccess = () => resolve(true);
+        request.onerror = (e) => reject(e.target.error);
+    });
+}

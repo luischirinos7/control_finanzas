@@ -1,4 +1,4 @@
-document.addEventListener('DOMContentLoaded', async () => {
+document.addEventListener('db-ready', async () => {
     await cargarCategorias();
     await configurarFormulario();
     await configurarFiltros();
@@ -7,8 +7,8 @@ document.addEventListener('DOMContentLoaded', async () => {
 async function cargarCategorias(filtro = 'todas', busqueda = '') {
     const categorias = await obtenerTodos(STORES.CATEGORIAS);
     const grid = document.getElementById('lista-categorias');
-    const vacio = document.getElementById('estado-vacio-categorias');
-    const contador = document.getElementById('total-categorias');
+    const vacio = document.getElementById('vacio-categorias');
+    const contador = document.getElementById('contador-cat');
     
     if (!grid) return;
     
@@ -69,7 +69,7 @@ async function configurarFormulario() {
     const form = document.getElementById('form-categoria');
     if (!form) return;
     
-    const colorInput = document.getElementById('color-categoria');
+    const colorInput = document.getElementById('color-cat');
     const muestra = document.getElementById('muestra-color');
     const valor = document.getElementById('valor-color');
     
@@ -82,7 +82,7 @@ async function configurarFormulario() {
         muestra.style.backgroundColor = colorInput.value;
     }
     
-    const btnLimpiar = document.getElementById('limpiar-form');
+    const btnLimpiar = document.getElementById('limpiar-cat');
     if (btnLimpiar) {
         btnLimpiar.addEventListener('click', () => {
             form.reset();
@@ -99,9 +99,9 @@ async function configurarFormulario() {
 }
 
 async function crearCategoria() {
-    const nombreInput = document.getElementById('nombre-categoria');
-    const colorInput = document.getElementById('color-categoria');
-    const tipoSelect = document.getElementById('tipo-categoria');
+    const nombreInput = document.getElementById('nombre-cat');
+    const colorInput = document.getElementById('color-cat');
+    const tipoSelect = document.getElementById('tipo-cat');
     
     const nombre = nombreInput.value.trim();
     const color = colorInput.value;
@@ -141,11 +141,11 @@ async function eliminarCategoria(id) {
     if (!confirm('¿Eliminar esta categoria? Todas las transacciones asociadas tambien se eliminaran.')) return;
     
     try {
-        const transacciones = await obtenerTodos(STORES.TRANSACCIONES);
+        const transacciones = await obtenerTodos(STORES.MOVIMIENTOS);
         const transAEliminar = transacciones.filter(trans => trans.categoria === id);
         
         for (const trans of transAEliminar) {
-            await eliminarItem(STORES.TRANSACCIONES, trans.id);
+            await eliminarItem(STORES.MOVIMIENTOS, trans.id);
         }
         
         await eliminarItem(STORES.CATEGORIAS, id);
@@ -159,7 +159,7 @@ async function eliminarCategoria(id) {
 
 async function configurarFiltros() {
     const filtros = document.querySelectorAll('.filtro');
-    const buscador = document.getElementById('buscar-categoria');
+    const buscador = document.getElementById('buscar-cat');
     
     filtros.forEach(filtro => {
         filtro.addEventListener('click', async (e) => {
