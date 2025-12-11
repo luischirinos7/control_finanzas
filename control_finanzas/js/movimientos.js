@@ -139,7 +139,9 @@ function configurarFormularioMov() {
 
         cerrarModal();
         await cargarMovimientos();
-        actualizarDashboard(); // <-- Actualiza el panel principal
+        if (window.dashboardInstance) {
+            window.dashboardInstance.actualizarDashboard();
+        }
         document.dispatchEvent(new Event("movimientos-actualizados"));
 
     });
@@ -151,7 +153,9 @@ async function eliminarMovimiento(id) {
 
     await eliminarItem(STORES.MOVIMIENTOS, id);
     await cargarMovimientos();
-    actualizarDashboard();
+    if (window.dashboardInstance) {
+        window.dashboardInstance.actualizarDashboard();
+    }
     document.dispatchEvent(new Event("movimientos-actualizados"));
 
 }

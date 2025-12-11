@@ -162,57 +162,51 @@ class DashboardComponent {
     }
 
     async cargarResumen() {
-        try {
-            const transacciones = await obtenerTodos(STORES.MOVIMIENTOS);
-            const mesActual = new Date().getMonth() + 1;
-            const anoActual = new Date().getFullYear();
-            
-            let totalIngresos = 0;
-            let totalGastos = 0;
-            let ingresosMes = 0;
-            let gastosMes = 0;
-            
-            transacciones.forEach(trans => {
-                const fechaTrans = new Date(trans.fecha);
-                const mesTrans = fechaTrans.getMonth() + 1;
-                const anoTrans = fechaTrans.getFullYear();
-                
-                if (trans.tipo === 'ingreso') {
-                    totalIngresos += trans.monto;
-                    if (mesTrans === mesActual && anoTrans === anoActual) {
-                        ingresosMes += trans.monto;
-                    }
+    try {
+        const transacciones = await obtenerTodos(STORES.MOVIMIENTOS);
+
+        const anoActual = new Date().getFullYear();
+
+        let ingresosAno = 0;
+        let gastosAno = 0;
+
+        transacciones.forEach(trans => {
+            const [y, m, d] = trans.fecha.split("-");
+            const fecha = new Date(Number(y), Number(m) - 1, Number(d));
+
+            if (fecha.getFullYear() === anoActual) {
+                if (trans.tipo === "ingreso") {
+                    ingresosAno += trans.monto;
                 } else {
-                    totalGastos += trans.monto;
-                    if (mesTrans === mesActual && anoTrans === anoActual) {
-                        gastosMes += trans.monto;
-                    }
+                    gastosAno += trans.monto;
                 }
-            });
-            
-            const balanceTotal = totalIngresos - totalGastos;
-            const balanceMes = ingresosMes - gastosMes;
-            
-            document.getElementById('total-ingresos').textContent = `$${ingresosMes.toFixed(2)}`;
-            document.getElementById('total-gastos').textContent = `$${gastosMes.toFixed(2)}`;
-            document.getElementById('balance-total').textContent = `$${balanceMes.toFixed(2)}`;
-            
-            const estadoBalance = document.getElementById('estado-balance');
-            if (balanceMes > 0) {
-                estadoBalance.textContent = 'Superávit';
-                estadoBalance.style.color = '#27ae60';
-            } else if (balanceMes < 0) {
-                estadoBalance.textContent = 'Déficit';
-                estadoBalance.style.color = '#e74c3c';
-            } else {
-                estadoBalance.textContent = 'Equilibrado';
-                estadoBalance.style.color = '#f39c12';
             }
-            
-        } catch (error) {
-            console.error('Error cargando resumen:', error);
+        });
+
+        const balanceAno = ingresosAno - gastosAno;
+
+        document.getElementById('total-ingresos').textContent = `$${ingresosAno.toFixed(2)}`;
+        document.getElementById('total-gastos').textContent = `$${gastosAno.toFixed(2)}`;
+        document.getElementById('balance-total').textContent = `$${balanceAno.toFixed(2)}`;
+
+        const estadoBalance = document.getElementById('estado-balance');
+
+        if (balanceAno > 0) {
+            estadoBalance.textContent = 'Superávit';
+            estadoBalance.style.color = '#27ae60';
+        } else if (balanceAno < 0) {
+            estadoBalance.textContent = 'Déficit';
+            estadoBalance.style.color = '#e74c3c';
+        } else {
+            estadoBalance.textContent = 'Equilibrado';
+            estadoBalance.style.color = '#f39c12';
         }
+
+    } catch (error) {
+        console.error('Error cargando resumen:', error);
     }
+}
+
 
     async cargarTransaccionesRecientes() {
         try {
@@ -764,18 +758,11 @@ document.addEventListener('db-ready', async () => {
     await window.dashboardInstance.afterRender();
 });
 
-document.addEventListener("movimientos-actualizados", actualizarDashboard);
-document.addEventListener("categorias-actualizadas", actualizarDashboard);
+document.addEventListener("movimientos-actualizados", () => {
+    window.dashboardInstance?.actualizarDashboard();
+});
 
-async function actualizarDashboard() {
-    const dash = window.dashboardInstance;
-    await dash.cargarResumen();
-    await dash.cargarTransaccionesRecientes();
-    await dash.cargarPresupuestosDashboard();
+document.addEventListener("categorias-actualizadas", () => {
+    window.dashboardInstance?.actualizarDashboard();
+});
 
-    const mesActual = new Date().getMonth() + 1;
-
-    await dash.actualizarGraficoGastos(mesActual);
-    await dash.actualizarGraficoBalance(mesActual);
-    await dash.actualizarGraficoComparativa(mesActual);
-}
