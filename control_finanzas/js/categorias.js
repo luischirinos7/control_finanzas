@@ -135,6 +135,7 @@ async function crearCategoria() {
             alert('Error al crear la categoria');
         }
     }
+    document.dispatchEvent(new Event("categorias-actualizadas"));
 }
 
 async function eliminarCategoria(id) {
@@ -155,6 +156,7 @@ async function eliminarCategoria(id) {
         console.error(error);
         alert('Error al eliminar la categoria');
     }
+    document.dispatchEvent(new Event("categorias-actualizadas"));
 }
 
 async function configurarFiltros() {

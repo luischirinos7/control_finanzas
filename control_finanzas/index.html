@@ -189,15 +189,39 @@
 
         
         <section id="transacciones" class="seccion-pagina" style="display: none;">
-            <div class="mensaje-proximo">
-                <div style="font-size: 18px; margin-bottom: 10px;">Gestion de Movimientos</div>
-                <p>Funcionalidad en desarrollo</p>
-                <p style="margin-top: 15px;">Podras registrar, editar y eliminar todos tus movimientos financieros</p>
-                <button class="boton" style="margin-top: 20px;" onclick="mostrarSeccion('panel')">Volver al Panel</button>
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px;">
+                <div class="seccion-titulo" style="margin-bottom: 0;">Gestión de Movimientos</div>
+                <button id="btn-nuevo-mov" class="boton">Nuevo Movimiento</button>
             </div>
-        </section>
-
-      
+            <div class="seccion" style="margin-bottom: 20px;">
+                <div style="display: flex; gap: 10px; flex-wrap: wrap;">
+                    <select id="filtro-tipo" class="busqueda" style="max-width: 180px;">
+                        <option value="todos">Todos los tipos</option>
+                        <option value="ingreso">Ingresos</option>
+                        <option value="gasto">Gastos</option>
+                    </select>
+                    <select id="filtro-categoria" class="busqueda" style="max-width: 180px;">
+                        <option value="todas">Todas las categorías</option>
+                    </select>
+                    <input type="text" id="buscar-mov" class="busqueda" placeholder="Buscar por descripción..." style="max-width: 200px;">
+                </div>
+            </div>
+            
+            <div class="seccion">
+                <div class="lista-cabecera" style="grid-template-columns: 1fr 1fr 1fr 1fr 1fr 100px;">
+                    <span>Tipo</span>
+                    <span>Categoría</span>
+                    <span>Monto</span>
+                    <span>Fecha</span>
+                    <span>Descripción</span>
+                    <span>Acciones</span>
+                </div>
+                <ul id="lista-movimientos" style="list-style: none;"></ul>
+                <div id="mov-vacio" class="estado-vacio" style="display: none;">
+                    No hay movimientos registrados
+                </div>
+            </div>
+        </section>        
         <section id="presupuestos" class="seccion-pagina" style="display: none;">
             <div class="mensaje-proximo">
                 <div style="font-size: 18px; margin-bottom: 10px;">Gestion de Presupuestos</div>
@@ -262,5 +286,6 @@
     <script src="js/categorias.js"></script>
     <script src="js/dashboard.js"></script>
     <script src="js/navegacion.js"></script>
+    <script src="js/movimientos.js"></script>
 </body>
 </html>

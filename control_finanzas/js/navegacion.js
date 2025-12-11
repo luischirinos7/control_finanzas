@@ -29,3 +29,12 @@ function mostrarSeccion(id) {
         botonActivo.classList.add('activo');
     }
 }
+document.addEventListener("DOMContentLoaded", () => {
+    const btnPanelMov = document.getElementById("btn-nueva-transaccion");
+
+    if (btnPanelMov) {
+        btnPanelMov.addEventListener("click", () => {
+            mostrarSeccion("transacciones");
+        });
+    }
+});
