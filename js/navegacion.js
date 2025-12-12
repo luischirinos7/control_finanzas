@@ -14,20 +14,25 @@ function mostrarSeccion(id) {
     document.querySelectorAll('.seccion-pagina').forEach(sec => {
         sec.style.display = 'none';
     });
-    
+
     const seccion = document.getElementById(id);
     if (seccion) {
         seccion.style.display = 'block';
     }
-    
+
     document.querySelectorAll('.boton-nav').forEach(btn => {
         btn.classList.remove('activo');
     });
-    
+
     const botonActivo = document.querySelector(`a[href="#${id}"]`);
     if (botonActivo) {
         botonActivo.classList.add('activo');
     }
+
+    if (id === "presupuestos" && typeof cargarCategoriasPresupuesto === "function") {
+    cargarCategoriasPresupuesto();
+}
+   
 }
 document.addEventListener("DOMContentLoaded", () => {
     const btnPanelMov = document.getElementById("btn-nueva-transaccion");

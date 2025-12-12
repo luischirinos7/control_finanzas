@@ -46,7 +46,6 @@
                         Gastos por Categoria
                         <select class="selector-mes">
                             <option>Este Mes</option>
-                            <option>Mes Pasado</option>
                         </select>
                     </div>
                     <div class="grafico-container">
@@ -197,13 +196,73 @@
             </div>
         </section>        
         <section id="presupuestos" class="seccion-pagina" style="display: none;">
-            <div class="mensaje-proximo">
-                <div style="font-size: 18px; margin-bottom: 10px;">Gestion de Presupuestos</div>
-                <p>Funcionalidad en desarrollo</p>
-                <p style="margin-top: 15px;">Podras establecer y controlar tus presupuestos mensuales</p>
-                <button class="boton" style="margin-top: 20px;" onclick="mostrarSeccion('panel')">Volver al Panel</button>
+
+    <div class="contenedor-formulario">
+        <div class="seccion-titulo">Nuevo Presupuesto</div>
+
+        <form id="form-presupuesto">
+
+            <div class="grupo-form">
+                <label for="pres-categoria">Categoría (Gasto)</label>
+                <select id="pres-categoria" required></select>
             </div>
-        </section>
+
+            <div class="grupo-form">
+                <label for="pres-mes">Mes</label>
+                <select id="pres-mes" required>
+                    <option value="1">Enero</option>
+                    <option value="2">Febrero</option>
+                    <option value="3">Marzo</option>
+                    <option value="4">Abril</option>
+                    <option value="5">Mayo</option>
+                    <option value="6">Junio</option>
+                    <option value="7">Julio</option>
+                    <option value="8">Agosto</option>
+                    <option value="9">Septiembre</option>
+                    <option value="10">Octubre</option>
+                    <option value="11">Noviembre</option>
+                    <option value="12">Diciembre</option>
+                </select>
+            </div>
+
+            <div class="grupo-form">
+                <label for="pres-anio">Año</label>
+                <input type="number" id="pres-anio" min="2000" max="2100" required>
+            </div>
+
+            <div class="grupo-form">
+                <label for="pres-monto">Monto estimado</label>
+                <input type="number" id="pres-monto" min="0.01" step="0.01" required>
+            </div>
+
+            <div class="acciones-form">
+                <button type="submit" class="boton">Guardar Presupuesto</button>
+            </div>
+
+        </form>
+    </div>
+
+    <div class="seccion">
+        <div class="seccion-titulo">Presupuestos Registrados</div>
+
+        <div class="lista-cabecera" style="grid-template-columns: 2fr 1fr 1fr 1fr 100px;">
+            <span>Categoría</span>
+            <span>Periodo</span>
+            <span>Estimado</span>
+            <span>Desviación</span>
+            <span>Acciones</span>
+        </div>
+
+        <ul id="lista-presupuestos" style="list-style:none;"></ul>
+
+        <div id="pres-vacio" class="estado-vacio" style="display:none;">
+            No hay presupuestos creados
+        </div>
+    </div>
+    
+
+</section>
+
     </main>
 
 <div id="modal-transaccion" class="modal-oculto">
@@ -260,6 +319,7 @@
     <script src="js/categorias.js"></script>
     <script src="js/dashboard.js"></script>
     <script src="js/navegacion.js"></script>
+    <script src="js/presupuestos.js"></script>
     <script src="js/movimientos.js"></script>
 </body>
 </html>

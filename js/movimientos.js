@@ -136,6 +136,7 @@ function configurarFormularioMov() {
         } else {
             await agregarItem(STORES.MOVIMIENTOS, mov);
         }
+        await verificarPresupuestoExcedido(mov);
 
         cerrarModal();
         await cargarMovimientos();
@@ -229,4 +230,38 @@ async function aplicarFiltros() {
 
         lista.appendChild(li);
     });
+}
+
+async function verificarPresupuestoExcedido(movimiento) {
+
+    // Solo tiene sentido para gastos
+    if (movimiento.tipo !== "gasto") return;
+
+    const presupuestos = await obtenerTodos(STORES.PRESUPUESTOS);
+    const movimientos = await obtenerTodos(STORES.MOVIMIENTOS);
+    const categorias  = await obtenerTodos(STORES.CATEGORIAS);
+
+    const presupuesto = presupuestos.find(p =>
+        p.categoria === movimiento.categoria &&
+        p.mes === (new Date(movimiento.fecha).getMonth() + 1) &&
+        p.anio === new Date(movimiento.fecha).getFullYear()
+    );
+
+    if (!presupuesto) return;
+
+    const categoria = categorias.find(c => c.id === movimiento.categoria);
+    if (!categoria) return;
+
+    const gastoReal = movimientos
+        .filter(m =>
+            m.tipo === "gasto" &&
+            m.categoria === movimiento.categoria &&
+            new Date(m.fecha).getMonth() + 1 === presupuesto.mes &&
+            new Date(m.fecha).getFullYear() === presupuesto.anio
+        )
+        .reduce((total, m) => total + m.monto, 0);
+
+    if (gastoReal > presupuesto.monto) {
+        alert(`Presupuesto sobrepasado en ${categoria.nombre}`);
+    }
 }
